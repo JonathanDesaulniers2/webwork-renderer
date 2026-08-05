@@ -30,7 +30,7 @@ sudo ufw reload
 
 Le renderer lui-même ne fait pas de HTTPS — utilisez [Caddy](https://caddyserver.com/) comme
 reverse proxy. Voir le `Caddyfile` d'exemple et les instructions complètes dans le
-[README du plugin Moodle](https://github.com/JonathanDesaulniers/moodle-qtype_webwork#caddy), puisque Caddy sert aussi de point
+[README du plugin Moodle](https://github.com/JonathanDesaulniers2/moodle-qtype_webwork#caddy), puisque Caddy sert aussi de point
 de navigation en lecture seule pour les banques de problèmes utilisées par le plugin.
 
 ### Certificat HTTPS : deux approches selon le contexte

@@ -2,7 +2,7 @@
 
 Images Docker du [Standalone Renderer](https://github.com/openwebwork/renderer) de WeBWorK,
 préparées pour fonctionner avec le plugin Moodle
-[qtype_webwork](https://github.com/JonathanDesaulniers/moodle-qtype_webwork).
+[qtype_webwork](https://github.com/JonathanDesaulniers2/moodle-qtype_webwork).
 
 Deux variantes sont disponibles :
 
@@ -19,10 +19,10 @@ les traductions les distinguent.
 
 ```bash
 # Variante française
-docker pull ghcr.io/jonathandesaulniers/webwork-renderer:fr
+docker pull ghcr.io/jonathandesaulniers2/webwork-renderer:fr
 
 # Variante internationale
-docker pull ghcr.io/jonathandesaulniers/webwork-renderer:intl
+docker pull ghcr.io/jonathandesaulniers2/webwork-renderer:intl
 ```
 
 Puis lancez le conteneur (adaptez les chemins) :
@@ -40,7 +40,7 @@ sudo docker run -d \
   --mount type=bind,source="$(pwd)"/volumes/webwork-open-problem-library/,target=/usr/app/webwork-open-problem-library \
   --mount type=bind,source="$(pwd)"/private/,target=/usr/app/private \
   --env MOJO_MODE=development \
-  ghcr.io/jonathandesaulniers/webwork-renderer:fr
+  ghcr.io/jonathandesaulniers2/webwork-renderer:fr
 ```
 
 ## Construire soi-même

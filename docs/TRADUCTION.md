@@ -21,7 +21,7 @@ utilisez la variante `intl` (voir le [README principal](../README.md)).
 
 Depuis `patch_renderproblem.pl`, le choix entre MathQuill, MathView, et aucun éditeur assisté
 est surchargeable **par requête** (donc par question, configuré dans le plugin Moodle — voir
-[son README](https://github.com/JonathanDesaulniers/moodle-qtype_webwork)), via le paramètre `entryAssist` du render-api :
+[son README](https://github.com/JonathanDesaulniers2/moodle-qtype_webwork)), via le paramètre `entryAssist` du render-api :
 - `entryAssist=MathQuill` (ou absent) → MathQuill
 - `entryAssist=MathView` → MathView (traduit en français, notation d'intervalle québécoise ]a,b[)
 - toute autre valeur (ex. `None`) → aucun éditeur assisté (champ texte brut)
