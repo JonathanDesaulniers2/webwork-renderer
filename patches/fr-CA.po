@@ -1,0 +1,290 @@
+# Traductions françaises (Canada) pour les messages PG (WeBWorK).
+# Basé sur en.po et fr-CA.po du dépôt github.com/openwebwork/pg
+# (lib/WeBWorK/PG/Localize/), complété pour couvrir 100% des chaînes
+# présentes dans en.po -- toutes les entrées vides ou manquantes ont été
+# traduites (voir le dépôt du projet qtype_webwork pour le contexte).
+#
+# Traducteurs d'origine (fr-CA.po) :
+# Hélène Larue <helene.larue@videotron.ca>, 2017
+# Jonathan Desaulniers <jonathan.desaulniers@cegepmontpetit.ca>, 2018-2019,2021-2022
+# Julie Tremblay <julie.tremblay@bdeb.qc.ca>, 2016-2017
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: webwork2\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2026-07-25 00:00-0500\n"
+"Last-Translator: Jonathan Desaulniers <jonathan.desaulniers@cegepmontpetit.ca>\n"
+"Language-Team: French (Canada) (http://app.transifex.com/webwork/webwork2/language/fr_CA/)\n"
+"Language: fr_CA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. ($numManuallyGraded)
+#: /opt/webwork/pg/macros/PG.pl:1427
+msgid "%1 of the answers %plural(%1,has,have) been graded."
+msgstr "%1 des réponses %plural(%1,a été,ont été) corrigée(s)."
+
+#. (@answerNames - $numBlank - $numCorrect - $numManuallyGraded)
+#: /opt/webwork/pg/macros/PG.pl:1399
+msgid "%1 of the answers %plural(%1,is,are) NOT correct."
+msgstr "%1 des réponses %plural(%1,n'est,ne sont) pas correcte(s)."
+
+#. ($numManuallyGraded)
+#: /opt/webwork/pg/macros/PG.pl:1423
+msgid "%1 of the answers will be graded later."
+msgstr "%1 des réponses seront corrigées plus tard."
+
+#. ($options{resultTitle})
+#: /opt/webwork/pg/macros/PG.pl:1204
+msgid "%1 with message"
+msgstr "%1 avec message"
+
+#. (round($answerScore * 100)
+#: /opt/webwork/pg/macros/PG.pl:1097
+msgid "%1% correct"
+msgstr "%1% correct"
+
+#. ($numBlank)
+#: /opt/webwork/pg/macros/PG.pl:1412
+msgid "%quant(%1,of the questions remains,of the questions remain) unanswered."
+msgstr "%quant(%1, question reste, questions restent) sans réponse."
+
+#: /opt/webwork/pg/macros/PG.pl:1386
+msgid "All of the answers are correct."
+msgstr "Toutes les réponses sont correctes."
+
+#: /opt/webwork/pg/macros/PG.pl:1377
+msgid "All of the computer gradable answers are correct."
+msgstr "Toutes les réponses évaluables automatiquement sont correctes."
+
+#: /opt/webwork/pg/macros/PG.pl:1045
+msgid "Answer Preview"
+msgstr "Aperçu de la réponse"
+
+#: /opt/webwork/pg/macros/PG.pl:1220 /opt/webwork/pg/macros/PG.pl:1285
+msgid "Close"
+msgstr "Fermer"
+
+#: /opt/webwork/pg/macros/PG.pl:1089
+msgid "Correct"
+msgstr "Réussi"
+
+#: /opt/webwork/pg/macros/PG.pl:1291
+msgid "Correct Answer"
+msgstr "Bonne réponse"
+
+#: /opt/webwork/pg/macros/parsers/parserPopUp.pl:496
+msgid "False"
+msgstr "Faux"
+
+#: /opt/webwork/pg/macros/deprecated/problemRandomize.pl:186
+#: /opt/webwork/pg/macros/deprecated/problemRandomize.pl:187
+msgid "Get a new version of this problem"
+msgstr "Obtenir une nouvelle version du problème"
+
+#: /opt/webwork/pg/macros/deprecated/compoundProblem.pl:483
+msgid "Go back to Part 1"
+msgstr "Retour à la partie 1"
+
+#: /opt/webwork/pg/macros/deprecated/compoundProblem.pl:293
+#: /opt/webwork/pg/macros/deprecated/compoundProblem.pl:498
+#: /opt/webwork/pg/macros/deprecated/compoundProblem.pl:512
+msgid "Go on to next part"
+msgstr "Aller à la partie suivante"
+
+#: /opt/webwork/pg/macros/core/PGessaymacros.pl:71
+msgid "Graded"
+msgstr "Corrigé"
+
+#: /opt/webwork/pg/macros/deprecated/problemRandomize.pl:427
+msgid "Hardcopy will always print the original version of the problem."
+msgstr "Le document imprimé affichera toujours la version originale du problème."
+
+#: /opt/webwork/pg/macros/core/PGbasicmacros.pl:1327
+msgid "Hint"
+msgstr "Indice"
+
+#: /opt/webwork/pg/macros/core/PGbasicmacros.pl:1326
+msgid "Hint:"
+msgstr "Indice :"
+
+#: /opt/webwork/pg/macros/deprecated/problemRandomize.pl:425
+msgid "If you come back to it later, it may revert to its original version."
+msgstr "Si vous revenez plus tard, le problème pourrait être revenu à sa version originale."
+
+#: /opt/webwork/pg/macros/PG.pl:1093
+msgid "Incorrect"
+msgstr "Erroné"
+
+#: /opt/webwork/pg/macros/deprecated/problemRandomize.pl:396
+#: /opt/webwork/pg/macros/deprecated/problemRandomize.pl:422
+msgid "Note:"
+msgstr "Note :"
+
+#: /opt/webwork/pg/macros/core/PGessaymacros.pl:145
+msgid "Preview"
+msgstr "Aperçu"
+
+#: /opt/webwork/pg/macros/PG.pl:1254
+msgid "Preview of Your Answer"
+msgstr "Aperçu de votre réponse"
+
+#: /opt/webwork/pg/macros/ui/quickMatrixEntry.pl:100
+#: /opt/webwork/pg/macros/ui/quickMatrixEntry.pl:59
+msgid "Quick Entry"
+msgstr "Saisie rapide"
+
+#: /opt/webwork/pg/macros/PG.pl:1297
+msgid "Reveal"
+msgstr "Révéler"
+
+#: /opt/webwork/pg/macros/deprecated/problemRandomize.pl:188
+msgid "Set random seed to:"
+msgstr "Définir la source aléatoire à :"
+
+#: /opt/webwork/pg/macros/core/PGbasicmacros.pl:1319
+msgid "Solution"
+msgstr "Solution"
+
+#: /opt/webwork/pg/macros/core/PGbasicmacros.pl:1318
+msgid "Solution:"
+msgstr "Solution :"
+
+#: /opt/webwork/pg/macros/deprecated/compoundProblem.pl:525
+msgid "Submit your answers again to go on to the next part."
+msgstr "Soumettre votre réponse à nouveau pour passer à la partie suivante."
+
+#: /opt/webwork/pg/macros/PG.pl:1347
+msgid "The answer has been graded."
+msgstr "La réponse a été corrigée."
+
+#: /opt/webwork/pg/macros/PG.pl:1365
+msgid "The answer is NOT correct."
+msgstr "La réponse n'est PAS correcte."
+
+#: /opt/webwork/pg/macros/PG.pl:1336
+msgid "The answer is correct."
+msgstr "La réponse est correcte."
+
+#: /opt/webwork/pg/macros/PG.pl:1346
+msgid "The answer will be graded later."
+msgstr "La réponse sera corrigée plus tard."
+
+#: /opt/webwork/pg/macros/PG.pl:1356
+msgid "The question has not been answered."
+msgstr "La question n'a pas reçu de réponse."
+
+#: /opt/webwork/pg/macros/core/PGessaymacros.pl:92
+msgid "This answer will be graded at a later time."
+msgstr "Cette réponse sera corrigée ultérieurement."
+
+#: /opt/webwork/pg/macros/deprecated/problemRandomize.pl:423
+msgid "This is a new (re-randomized) version of the problem."
+msgstr "Voici une nouvelle version (à nouveau randomisée) du problème."
+
+#: /opt/webwork/pg/macros/core/PGessaymacros.pl:159
+msgid ""
+"This is an essay answer text box. You can type your answer in here and, "
+"after you hit submit, it will be saved so that your instructor can grade it "
+"at a later date. If your instructor makes any comments on your answer those "
+"comments will appear on this page after the question has been graded. You "
+"can use LaTeX to make your math equations look pretty. LaTeX expressions "
+"should be enclosed using the parenthesis notation and not dollar signs."
+msgstr ""
+"Ceci est une zone de texte pour une réponse rédigée. Vous pouvez y taper "
+"votre réponse et, une fois soumise, elle sera enregistrée afin que votre "
+"enseignant puisse la corriger plus tard. Si votre enseignant ajoute des "
+"commentaires sur votre réponse, ceux-ci apparaîtront sur cette page une "
+"fois la question corrigée. Vous pouvez utiliser LaTeX pour bien présenter "
+"vos équations mathématiques. Les expressions LaTeX doivent être encadrées "
+"de parenthèses, et non de signes de dollar."
+
+#: /opt/webwork/pg/macros/core/PGbasicmacros.pl:3041
+msgid "This problem contains a video which must be viewed online."
+msgstr "Ce problème contient une vidéo qui doit être consultée en ligne."
+
+#: /opt/webwork/pg/macros/deprecated/compoundProblem.pl:631
+msgid "This problem has more than one part."
+msgstr "Ce problème comporte plusieurs parties."
+
+#: /opt/webwork/pg/macros/parsers/parserPopUp.pl:495
+msgid "True"
+msgstr "Vrai"
+
+#: /opt/webwork/pg/macros/core/PGessaymacros.pl:69
+msgid "Ungraded"
+msgstr "Non classé"
+
+#: /opt/webwork/pg/macros/PG.pl:1249
+msgid "You Entered"
+msgstr "Vous avez entré"
+
+#: /opt/webwork/pg/macros/core/PGanswermacros.pl:1615
+msgid "You can earn partial credit on this problem."
+msgstr "Vous pouvez obtenir une partie des points pour ce problème."
+
+#: /opt/webwork/pg/macros/deprecated/problemRandomize.pl:397
+msgid "You can get a new version of this problem after the due date."
+msgstr "Vous pouvez obtenir une nouvelle version du problème après la date de remise."
+
+#: /opt/webwork/pg/macros/deprecated/compoundProblem.pl:646
+msgid "You may not change your answers when going on to the next part!"
+msgstr "Vous ne pouvez pas modifier vos réponses en passant à la partie suivante!"
+
+#: /opt/webwork/pg/macros/core/PGbasicmacros.pl:3034
+msgid "Your browser does not support the video tag."
+msgstr "Votre navigateur ne supporte pas l'environnement vidéo."
+
+#: /opt/webwork/pg/macros/deprecated/compoundProblem.pl:634
+msgid "Your score for this attempt is for this part only;"
+msgstr "Votre résultat pour cette tentative correspond à cette partie seulement;"
+
+#: /opt/webwork/pg/macros/core/PGbasicmacros.pl:544
+#: /opt/webwork/pg/macros/core/PGbasicmacros.pl:555
+msgid "answer"
+msgstr "réponse"
+
+#: /opt/webwork/pg/macros/core/PGbasicmacros.pl:567
+msgid "column"
+msgstr "colonne"
+
+# does not need to be translated
+#. ('j', 'k', '_0')
+#. ('j', 'k')
+#: /opt/webwork/pg/lib/Parser/List/Vector.pm:41
+#: /opt/webwork/pg/lib/Value/Vector.pm:303
+#: /opt/webwork/pg/macros/contexts/contextLimitedVector.pl:95
+msgid "i"
+msgstr "Je"
+
+#: /opt/webwork/pg/macros/contexts/contextPiecewiseFunction.pl:840
+msgid "if"
+msgstr "Si"
+
+#: /opt/webwork/pg/macros/contexts/contextPiecewiseFunction.pl:843
+msgid "otherwise"
+msgstr "autrement"
+
+#: /opt/webwork/pg/macros/core/PGbasicmacros.pl:561
+msgid "part"
+msgstr "partie"
+
+#: /opt/webwork/pg/macros/core/PGbasicmacros.pl:550
+msgid "problem"
+msgstr "problème"
+
+#: /opt/webwork/pg/macros/core/PGbasicmacros.pl:567
+msgid "row"
+msgstr "ligne"
+
+#: /opt/webwork/pg/macros/deprecated/compoundProblem.pl:485
+#: /opt/webwork/pg/macros/deprecated/compoundProblem.pl:500
+msgid "when you submit your answers"
+msgstr "quand vous soumettez vos réponses"
+
+#: /opt/webwork/pg/macros/deprecated/compoundProblem.pl:638
+msgid "your overall score is for all the parts combined."
+msgstr "votre résultat d'ensemble est pour chacune des parties combinées."

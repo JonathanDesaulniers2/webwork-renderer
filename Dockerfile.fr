@@ -1,0 +1,59 @@
+# syntax=docker/dockerfile:1
+#
+# Renderer WeBWorK — variante FRANÇAISE (fr-CA)
+#
+# Ajoute la francisation complète PAR-DESSUS la variante internationale
+# (Dockerfile.intl), qui contient déjà TeX Live, MathJax local, et les
+# correctifs d'intégration Moodle communs aux deux variantes.
+#
+# Cette séparation est volontaire : les correctifs de Dockerfile.intl
+# corrigent de vrais bogues d'intégration (indépendants de la langue),
+# tandis que ce fichier-ci ne contient QUE des traductions.
+#
+# Construction (les deux étapes sont nécessaires, dans cet ordre) :
+#   docker build --tag renderer:1.0 ./container                              # base officielle
+#   docker build --no-cache --tag webwork-renderer:intl --file Dockerfile.intl .
+#   docker build --no-cache --tag webwork-renderer:fr   --file Dockerfile.fr   .
+
+FROM webwork-renderer:intl
+
+# Traduction française (fr-CA) des messages d'erreur bas niveau du Parser
+# ("Variable 'x' is not defined in this context", "Extra close parenthesis",
+# etc. -- ~185 messages), qui ne passent PAS par le système standard
+# maketext/.po de WeBWorK.
+#
+# ATTENTION : contrairement au catalogue .po ci-dessous, ce correctif n'est
+# PAS bilingue -- ces messages resteront TOUJOURS en français, même si
+# Moodle demande "language=en". Pour une installation devant rester
+# réellement bilingue, utilisez Dockerfile.intl seul.
+COPY patches/patch_context.pl /tmp/patch_context.pl
+RUN perl /tmp/patch_context.pl /usr/app/lib/PG/lib/Value/Context.pm \
+    && perl -I/usr/app/lib/PG/lib -c /usr/app/lib/PG/lib/Value/Context.pm \
+    && rm /tmp/patch_context.pl
+
+# Catalogue fr-CA.po complet (Correct, Erroné, Indice, Solution, Aperçu,
+# etc. -- ~160 chaînes) -- système standard maketext/.po, BILINGUE : il
+# respecte le paramètre "language" du render-api.
+COPY patches/fr-CA.po /usr/app/lib/PG/lib/WeBWorK/PG/Localize/fr-CA.po
+
+# Remplace le fichier de traduction anglais de MathView (catégories,
+# info-bulles) par la version française. Notation d'intervalle québécoise
+# (]a,b[ plutôt que (a,b)).
+COPY patches/mv_locale_fr.js /usr/app/lib/PG/htdocs/js/MathView/mv_locale_us.b4786305.min.js
+
+# Traduit tous les messages d'erreur destinés à l'étudiant dans
+# CofIdaho_macros.pl (utilise ans_message directement, pas le mécanisme
+# $context->{error}{msg} de Value/Context.pm -- convention propre à ce
+# fichier macro, probablement partagée par d'autres fichiers macro non
+# encore examinés ; voir README.md, section « Couverture incrémentale »).
+COPY patches/patch_cofidaho.pl /tmp/patch_cofidaho.pl
+RUN perl /tmp/patch_cofidaho.pl /usr/app/lib/PG/macros/deprecated/CofIdaho_macros.pl \
+    && rm /tmp/patch_cofidaho.pl
+
+# Traduit le message dynamique "Your answer isn't X (it looks like Y)" de
+# AnswerChecker.pm, construit à partir de cmp_class()/showClass() -- sans
+# toucher à ces fonctions elles-mêmes (utilisées ailleurs pour de la
+# logique interne basée sur la présence du mot anglais "Formula").
+COPY patches/patch_answerchecker.pl /tmp/patch_answerchecker.pl
+RUN perl /tmp/patch_answerchecker.pl /usr/app/lib/PG/lib/Value/AnswerChecker.pm \
+    && rm /tmp/patch_answerchecker.pl

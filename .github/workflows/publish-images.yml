@@ -1,0 +1,77 @@
+name: Construire et publier les images
+
+# Publie les deux variantes (intl et fr) sur GitHub Container Registry
+# (ghcr.io) à chaque étiquette de version (ex. v1.0), et permet aussi un
+# déclenchement manuel depuis l'onglet Actions.
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_BASE: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Récupérer ce dépôt
+        uses: actions/checkout@v4
+
+      # L'image de base officielle du renderer n'est pas publiée sur un
+      # registre public -- il faut la construire nous-mêmes depuis les
+      # sources amont avant de pouvoir appliquer nos correctifs.
+      - name: Récupérer le renderer amont
+        uses: actions/checkout@v4
+        with:
+          repository: openwebwork/renderer
+          submodules: recursive
+          path: container
+
+      - name: Construire l'image de base (renderer:1.0)
+        run: docker build --tag renderer:1.0 ./container
+
+      - name: Déterminer la version
+        id: version
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            echo "value=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=dev-$(date +%Y%m%d)" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Construire la variante internationale
+        run: docker build --tag webwork-renderer:intl --file Dockerfile.intl .
+
+      - name: Construire la variante française
+        run: docker build --tag webwork-renderer:fr --file Dockerfile.fr .
+
+      - name: Se connecter à ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Étiqueter et publier
+        run: |
+          VERSION="${{ steps.version.outputs.value }}"
+          REPO=$(echo "${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}" | tr '[:upper:]' '[:lower:]')
+
+          for variant in intl fr; do
+            docker tag "webwork-renderer:${variant}" "${REPO}:${variant}-${VERSION}"
+            docker push "${REPO}:${variant}-${VERSION}"
+
+            # L'étiquette flottante (intl / fr, sans numéro) ne suit que les
+            # versions publiées, pas les constructions manuelles de test.
+            if [ "${{ github.ref_type }}" = "tag" ]; then
+              docker tag "webwork-renderer:${variant}" "${REPO}:${variant}"
+              docker push "${REPO}:${variant}"
+            fi
+          done

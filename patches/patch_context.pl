@@ -1,0 +1,231 @@
+#!/usr/bin/env perl
+# Patch Value/Context.pm : ajoute "use utf8;" et un grand nombre de
+# traductions françaises (fr-CA) pour les messages d'erreur bas niveau du
+# Parser/Value de PG (ex. "Variable 'x' is not defined in this context",
+# "Extra close parenthesis", etc.), qui ne passent PAS par le système
+# standard maketext/.po de WeBWorK. Voir la table $context->{error}{msg}
+# (marquée "for localization" dans le code source d'origine) -- ce script y
+# ajoute nos traductions.
+#
+# Usage : perl patch_context.pl /chemin/vers/Context.pm
+use strict;
+use warnings;
+use utf8;
+binmode(STDOUT, ':utf8');
+
+my $path = shift @ARGV or die "Usage: perl patch_context.pl <Context.pm>\n";
+
+open(my $fh, '<:encoding(UTF-8)', $path) or die "Impossible d'ouvrir $path: $!\n";
+local $/;
+my $content = <$fh>;
+close($fh);
+
+if ($content =~ /use utf8;/) {
+    print "'use utf8;' deja present -- rien a faire pour cette partie.\n";
+} else {
+    $content =~ s/(package Value::Context;\n)/$1use utf8;\n/
+        or die "Marqueur 'package Value::Context;' introuvable.\n";
+}
+
+my $old = "msg     => {},      # for localization";
+
+my $hashbody = <<'HASHBODY_END';
+				"Variable '%s' is not defined in this context" => "La variable « %s » n'est pas définie dans ce contexte",
+				"'%s' is not defined in this context" => "« %s » n'est pas défini dans ce contexte",
+				"Absolute value can't be taken of %s" => "Impossible de prendre la valeur absolue de %s",
+				"Adaptive parameters can only be used for real-valued formulas" => "Les paramètres adaptatifs ne peuvent être utilisés que pour des formules à valeurs réelles",
+				"Can't differentiate intervals" => "Impossible de dériver des intervalles",
+				"Can't differentiate sets" => "Impossible de dériver des ensembles",
+				"Can't differentiate unions" => "Impossible de dériver des unions",
+				"Can't extract element number '%s' (index must be an integer)" => "Impossible d'extraire l'élément numéro « %s » (l'indice doit être un entier)",
+				"Can't raise a negative number to a non-integer power" => "Impossible d'élever un nombre négatif à une puissance non entière",
+				"Can't reduce:  negation operator is not defined" => "Impossible de réduire : l'opérateur de négation n'est pas défini",
+				"Can't solve for adaptive parameters" => "Impossible de résoudre pour les paramètres adaptatifs",
+				"Can't take absolute value of Complex Numbers in this context" => "Impossible de prendre la valeur absolue de nombres complexes dans ce contexte",
+				"Can't take determinant of non-square matrix" => "Impossible de prendre le déterminant d'une matrice non carrée",
+				"Can't take inverse of non-square matrix" => "Impossible de prendre l'inverse d'une matrice non carrée",
+				"Can't take %s of %s" => "Impossible de prendre %s de %s",
+				"Can't use method 'ijk' with objects of type '%s'" => "Impossible d'utiliser la méthode « ijk » avec des objets de type « %s »",
+				"Can't use '%s' in this context" => "Impossible d'utiliser « %s » dans ce contexte",
+				"Complex Numbers must have real and complex parts" => "Les nombres complexes doivent avoir une partie réelle et une partie imaginaire",
+				"Coordinates of a Point must be constant" => "Les coordonnées d'un point doivent être constantes",
+				"Coordinates of a Vector must be constant" => "Les coordonnées d'un vecteur doivent être constantes",
+				"Coordinates of intervals can only be numbers or infinity" => "Les coordonnées d'intervalles ne peuvent être que des nombres ou l'infini",
+				"Differentiation for '%s' is not implemented" => "La dérivation de « %s » n'est pas implémentée",
+				"Differentiation of '%s' not implemented" => "La dérivation de « %s » n'est pas implémentée",
+				"Division by zero" => "Division par zéro",
+				"Division is allowed only for Numbers or a Vector, Point, or Matrix and a Number" => "La division n'est permise que pour des nombres, ou un vecteur, point ou matrice avec un nombre",
+				"Entries can be extracted only from Vectors, Matrices, or Lists" => "Les éléments ne peuvent être extraits que de vecteurs, matrices ou listes",
+				"Entries in a Matrix must be Numbers or Lists of Numbers" => "Les éléments d'une matrice doivent être des nombres ou des listes de nombres",
+				"Entries in a Matrix must be of the same type and length" => "Les éléments d'une matrice doivent être du même type et de la même longueur",
+				"Entries in a set must be real numbers" => "Les éléments d'un ensemble doivent être des nombres réels",
+				"Entries of a Matrix must be constant" => "Les éléments d'une matrice doivent être constants",
+				"Exponential form is 'a*e^(bi)'" => "La forme exponentielle est « a*e^(bi) »",
+				"Exponentials can only be of the form 'e^(ai)' in this context" => "Les exponentielles ne peuvent être que de la forme « e^(ai) » dans ce contexte",
+				"Exponents must be Numbers" => "Les exposants doivent être des nombres",
+				"Factorial can only be taken of (non-negative) integers" => "La factorielle ne peut être prise que d'entiers (non négatifs)",
+				"Factorial only works on integers" => "La factorielle ne fonctionne que sur des entiers",
+				"Factorial requires an argument" => "La factorielle nécessite un argument",
+				"Factorial should have only one argument" => "La factorielle ne devrait avoir qu'un seul argument",
+				"Function '%s' doesn't accept Complex inputs" => "La fonction « %s » n'accepte pas d'entrées complexes",
+				"Function '%s' has the wrong type of inputs" => "La fonction « %s » a des entrées du mauvais type",
+				"Function '%s' has too few inputs" => "La fonction « %s » a trop peu d'entrées",
+				"Function '%s' has too many inputs" => "La fonction « %s » a trop d'entrées",
+				"Function '%s' is not allowed in this context" => "La fonction « %s » n'est pas permise dans ce contexte",
+				"Function '%s' requires a Complex input" => "La fonction « %s » nécessite une entrée complexe",
+				"Function '%s' requires a Complex or Matrixinput" => "La fonction « %s » nécessite une entrée complexe ou matricielle",
+				"Function '%s' requires a Matrix input" => "La fonction « %s » nécessite une entrée matricielle",
+				"Function '%s' requires a non-empty input list" => "La fonction « %s » nécessite une liste d'entrées non vide",
+				"Function '%s' requires a Vector input" => "La fonction « %s » nécessite une entrée vectorielle",
+				"Infinite endpoints must be open" => "Les extrémités infinies doivent être ouvertes",
+				"Intervals can have only two endpoints" => "Les intervalles ne peuvent avoir que deux extrémités",
+				"Intervals must have two endpoints" => "Les intervalles doivent avoir deux extrémités",
+				"Matrices are too deep to be multiplied" => "Les matrices sont trop imbriquées pour être multipliées",
+				"Matrices of dimensions %dx%d and %dx%d can't be multiplied" => "Des matrices de dimensions %dx%d et %dx%d ne peuvent être multipliées",
+				"Matrix is not invertible" => "La matrice n'est pas inversible",
+				"Matrix must be two-dimensional to convert to MatrixReal1" => "La matrice doit être bidimensionnelle pour être convertie en MatrixReal1",
+				"Method 'ijk' can only be used on vectors in three-space" => "La méthode « ijk » ne peut être utilisée que sur des vecteurs dans l'espace à trois dimensions",
+				"No value given for variable '%s'" => "Aucune valeur donnée pour la variable « %s »",
+				"Only one equality is allowed in an equation" => "Une seule égalité est permise dans une équation",
+				"Only one value allowed within absolute values" => "Une seule valeur est permise à l'intérieur d'une valeur absolue",
+				"Only square matrices can be raised to a power" => "Seules les matrices carrées peuvent être élevées à une puissance",
+				"Operand of '%s' can't be a list" => "L'opérande de « %s » ne peut pas être une liste",
+				"Operand of '%s' can't be %s" => "L'opérande de « %s » ne peut pas être %s",
+				"Operands for dot product must be Vectors" => "Les opérandes du produit scalaire doivent être des vecteurs",
+				"Operands for '%s' must be of the same length" => "Les opérandes de « %s » doivent être de la même longueur",
+				"Operands for '%s' must be of the same type" => "Les opérandes de « %s » doivent être du même type",
+				"Operands of '*' are not of compatible types" => "Les opérandes de « * » ne sont pas de types compatibles",
+				"Operands of '><' must be Vectors" => "Les opérandes de « >< » doivent être des vecteurs",
+				"Operands of '><' must by in three-space" => "Les opérandes de « >< » doivent être dans l'espace à trois dimensions",
+				"Operands of '%s' can't be lists" => "Les opérandes de « %s » ne peuvent pas être des listes",
+				"Operands of '%s' must be intervals or sets" => "Les opérandes de « %s » doivent être des intervalles ou des ensembles",
+				"Operands of '%s' must be Numbers" => "Les opérandes de « %s » doivent être des nombres",
+				"Result of exponentiation is not a number" => "Le résultat de l'exponentiation n'est pas un nombre",
+				"Right-hand operand of '_' must be a Number or List of numbers" => "L'opérande droit de « _ » doit être un nombre ou une liste de nombres",
+				"Sets can't contain infinity" => "Les ensembles ne peuvent pas contenir l'infini",
+				"The input for '%s' must be a number" => "L'entrée de « %s » doit être un nombre",
+				"The left endpoint of an interval can't be positive infinity" => "L'extrémité gauche d'un intervalle ne peut pas être l'infini positif",
+				"The right endpoint of an interval can't be negative infinity" => "L'extrémité droite d'un intervalle ne peut pas être l'infini négatif",
+				"You are not allowed to type decimal numbers in this problem" => "Vous n'êtes pas autorisé à saisir des nombres décimaux dans ce problème",
+				"You can only raise a Number to a power" => "Vous ne pouvez élever qu'un nombre à une puissance",
+				"You can only specify one variable when you give a derivative count" => "Vous ne pouvez spécifier qu'une seule variable lorsque vous donnez un nombre de dérivées",
+				"You can only use '%s' between (non-negative) integers" => "Vous ne pouvez utiliser « %s » qu'entre des entiers (non négatifs)",
+				"You can only use '%s' with (non-negative) numbers" => "Vous ne pouvez utiliser « %s » qu'avec des nombres (non négatifs)",
+				"You must specify a variable to differentiate by" => "Vous devez spécifier une variable par rapport à laquelle dériver",
+				"Your answer should be of the form %s" => "Votre réponse devrait être de la forme %s",
+				"Alias not allowed with %s objects" => "Alias non permis avec des objets %s",
+				"Alias '%s' doesn't exist for %s '%s'" => "L'alias « %s » n'existe pas pour %s « %s »",
+				"An element of a set can't be %s" => "Un élément d'un ensemble ne peut pas être %s",
+				"A number with units must be a constant, not %s" => "Un nombre avec unités doit être une constante, pas %s",
+				"A permutation cycle should not repeat an index" => "Un cycle de permutation ne devrait pas répéter un indice",
+				"Can only multiply 2-dimensional matrices" => "Seules les matrices bidimensionnelles peuvent être multipliées",
+				"Can't add Matrices with different dimensions" => "Impossible d'additionner des matrices de dimensions différentes",
+				"Can't add Points with different numbers of coordinates" => "Impossible d'additionner des points ayant un nombre de coordonnées différent",
+				"Can't add Vectors with different numbers of coordinates" => "Impossible d'additionner des vecteurs ayant un nombre de coordonnées différent",
+				"Can't compare Matrices with different dimensions" => "Impossible de comparer des matrices de dimensions différentes",
+				"Can't compute log of zero" => "Impossible de calculer le logarithme de zéro",
+				"Can't convert ARRAY of length %d to a Complex Number" => "Impossible de convertir un tableau de longueur %d en nombre complexe",
+				"Can't convert ARRAY of length %d to %s" => "Impossible de convertir un tableau de longueur %d en %s",
+				"Can't convert %s to an Interval, Set or Union" => "Impossible de convertir %s en intervalle, ensemble ou union",
+				"Can't convert %s to %s" => "Impossible de convertir %s en %s",
+				"Can't create ans_array for %d-dimensional matrix" => "Impossible de créer un ans_array pour une matrice à %d dimensions",
+				"Can't divide by a Matrix" => "Impossible de diviser par une matrice",
+				"Can't divide by a Point" => "Impossible de diviser par un point",
+				"Can't divide by a Vector" => "Impossible de diviser par un vecteur",
+				"Can't dot Vectors with different numbers of coordinates" => "Impossible de faire le produit scalaire de vecteurs ayant un nombre de coordonnées différent",
+				"Can't evaluate formula on test point (%s)" => "Impossible d'évaluer la formule au point d'essai (%s)",
+				"Can't make an interval only out of Infinity" => "Impossible de créer un intervalle composé uniquement d'infinis",
+				"Can't raise Points to powers" => "Impossible d'élever des points à une puissance",
+				"Can't raise Vectors to powers" => "Impossible d'élever des vecteurs à une puissance",
+				"Can't subtract Matrices with different dimensions" => "Impossible de soustraire des matrices de dimensions différentes",
+				"Can't subtract Points with different numbers of coordinates" => "Impossible de soustraire des points ayant un nombre de coordonnées différent",
+				"Can't subtract Vectors with different numbers of coordinates" => "Impossible de soustraire des vecteurs ayant un nombre de coordonnées différent",
+				"Can't transpose %d-dimensional matrices" => "Impossible de transposer des matrices à %d dimensions",
+				"Can't use Matrices in exponents" => "Impossible d'utiliser des matrices en exposant",
+				"Can't use Points in exponents" => "Impossible d'utiliser des points en exposant",
+				"Can't use Vectors in exponents" => "Impossible d'utiliser des vecteurs en exposant",
+				"Close parenthesis of interval must be ')' or ']'" => "La parenthèse fermante d'un intervalle doit être « ) » ou « ] »",
+				"Coordinate of Point can't be %s" => "Une coordonnée de point ne peut pas être %s",
+				"Coordinate of Vector can't be %s" => "Une coordonnée de vecteur ne peut pas être %s",
+				"Dimension must be a positive integer" => "La dimension doit être un entier positif",
+				"Either one or two rows must be specified for an Elementary matrix" => "Une ou deux lignes doivent être spécifiées pour une matrice élémentaire",
+				"Empty unions are not allowed" => "Les unions vides ne sont pas permises",
+				"Endpoints of intervals must be numbers or infinities" => "Les extrémités d'intervalles doivent être des nombres ou des infinis",
+				"Formula does not return an Interval" => "La formule ne renvoie pas un intervalle",
+				"Formula does not return an Interval, Set or Union" => "La formule ne renvoie pas un intervalle, un ensemble ou une union",
+				"Formulas from different contexts can't be compared" => "Des formules provenant de contextes différents ne peuvent être comparées",
+				"Illegal %s name '%s'" => "Nom de %s illégal « %s »",
+				"Imaginary part can't be %s" => "La partie imaginaire ne peut pas être %s",
+				"Infinity should have no parameters" => "L'infini ne devrait avoir aucun paramètre",
+				"Interval can't be empty" => "Un intervalle ne peut pas être vide",
+				"Left endpoint must be less than right endpoint" => "L'extrémité gauche doit être inférieure à l'extrémité droite",
+				"Matrices can only be divided by Numbers" => "Les matrices ne peuvent être divisées que par des nombres",
+				"Matrices must have at least one entry" => "Les matrices doivent avoir au moins un élément",
+				"Matrix powers must be non-negative integers" => "Les puissances de matrice doivent être des entiers non négatifs",
+				"Matrix rows must all be the same length" => "Les lignes d'une matrice doivent toutes avoir la même longueur",
+				"Matrix rows must all be the same type" => "Les lignes d'une matrice doivent toutes être du même type",
+				"Method 'ijk' can only be used on Vectors in 3-space" => "La méthode « ijk » ne peut être utilisée que sur des vecteurs dans l'espace à 3 dimensions",
+				"No definition for function '%s'" => "Aucune définition pour la fonction « %s »",
+				"No definition for %s '%s' in the given context" => "Aucune définition pour %s « %s » dans le contexte donné",
+				"No such package 'Parser::%s'" => "Aucun module « Parser::%s »",
+				"No such package 'Value::%s'" => "Aucun module « Value::%s »",
+				"Open parenthesis of interval must be '(' or '['" => "La parenthèse ouvrante d'un intervalle doit être « ( » ou « [ »",
+				"Permutation cycles should be array references" => "Les cycles de permutation devraient être des références de tableau",
+				"Points can only be divided by Numbers" => "Les points ne peuvent être divisés que par des nombres",
+				"Points can only be multiplied by Numbers" => "Les points ne peuvent être multipliés que par des nombres",
+				"Points must have at least one coordinate" => "Les points doivent avoir au moins une coordonnée",
+				"Precedence type should be one of 'Standard' or 'Non-Standard'" => "Le type de précédence devrait être « Standard » ou « Non-Standard »",
+				"Real part can't be %s" => "La partie réelle ne peut pas être %s",
+				"Result is not a real number" => "Le résultat n'est pas un nombre réel",
+				"Result of exponention is not a number" => "Le résultat de l'exponentiation n'est pas un nombre",
+				"Single point intervals must use '[' and ']'" => "Les intervalles à un seul point doivent utiliser « [ » et « ] »",
+				"String constant '%s' is not defined in this context" => "La constante de chaîne « %s » n'est pas définie dans ce contexte",
+				"The constant 'i' may appear only once in your formula" => "La constante « i » ne peut apparaître qu'une seule fois dans votre formule",
+				"Too many arguments for Interval" => "Trop d'arguments pour un intervalle",
+				"Unions can be taken only for Intervals or Sets" => "Les unions ne peuvent être prises que pour des intervalles ou des ensembles",
+				"Unknown context '%s'" => "Contexte inconnu « %s »",
+				"Unrecognized variable type '%s'" => "Type de variable non reconnu « %s »",
+				"Vectors can only be divided by Numbers" => "Les vecteurs ne peuvent être divisés que par des nombres",
+				"Vectors can only be multiplied by Numbers" => "Les vecteurs ne peuvent être multipliés que par des nombres",
+				"Vectors for cross product must be in 3-space" => "Les vecteurs pour le produit vectoriel doivent être dans l'espace à 3 dimensions",
+				"Vectors must have at least one coordinate" => "Les vecteurs doivent avoir au moins une coordonnée",
+				"You must provide a dimension for an Elementary matrix" => "Vous devez fournir une dimension pour une matrice élémentaire",
+				"You must provide a dimension for a Permutation matrix" => "Vous devez fournir une dimension pour une matrice de permutation",
+				"You must provide a dimension for the Identity matrix" => "Vous devez fournir une dimension pour la matrice identité",
+				"You must provide dimensions for the Zero matrix" => "Vous devez fournir des dimensions pour la matrice nulle",
+				"Your units can only contain one division" => "Vos unités ne peuvent contenir qu'une seule division",
+				"Can't convert %s to a constant" => "Impossible de convertir %s en constante",
+				"Can't evaluate correct answer at adapted point (%s)" => "Impossible d'évaluer la bonne réponse au point adapté (%s)",
+				"Can't perform implied multiplication in this context" => "Impossible d'effectuer une multiplication implicite dans ce contexte",
+				"Coordinates of Points must be Numbers, not %s" => "Les coordonnées de points doivent être des nombres, pas %s",
+				"Coordinates of Vectors must be Numbers, not %s" => "Les coordonnées de vecteurs doivent être des nombres, pas %s",
+				"Empty parentheses" => "Parenthèses vides",
+				"Entries in a %s must be of the same type" => "Les éléments d'un(e) %s doivent être du même type",
+				"Extra close parenthesis '%s'" => "Parenthèse fermante en trop « %s »",
+				"Function '%s' is missing its input(s)" => "La fonction « %s » n'a pas reçu son (ou ses) entrée(s)",
+				"Mismatched parentheses: '%s' and '%s'" => "Parenthèses non correspondantes : « %s » et « %s »",
+				"Missing close parenthesis for '%s'" => "Parenthèse fermante manquante pour « %s »",
+				"Missing operand after '%s'" => "Opérande manquant après « %s »",
+				"Missing operand before '%s'" => "Opérande manquant avant « %s »",
+				"Null value can't be assigned to variable '%s'" => "Une valeur nulle ne peut pas être assignée à la variable « %s »",
+				"The value of '%s' can't be a formula" => "La valeur de « %s » ne peut pas être une formule",
+				"Undeclared variable '%s'" => "Variable non déclarée « %s »",
+				"Unexpected character '%s'" => "Caractère inattendu « %s »",
+				"Variable '%s' should be of type %s" => "La variable « %s » devrait être de type %s",
+				"We're sorry..." => "Nous sommes désolés...",
+				"We're still sorry..." => "Nous sommes toujours désolés...",
+				"Can't use '%s' with %s-valued operands" => "Impossible d'utiliser « %s » avec des opérandes de valeur %s",
+HASHBODY_END
+
+my $new = "msg     => {\n" . $hashbody . "\t\t\t},      # for localization (fr-CA -- voir notre depot GitHub)";
+
+if (index($content, $old) == -1) {
+    die "Ligne 'msg => {}, # for localization' introuvable -- fichier peut-etre deja different.\n";
+}
+$content =~ s/\Q$old\E/$new/;
+
+open(my $out, '>:encoding(UTF-8)', $path) or die "Impossible d'ecrire $path: $!\n";
+print $out $content;
+close($out);
+
+print "Correctif applique avec succes a $path\n";

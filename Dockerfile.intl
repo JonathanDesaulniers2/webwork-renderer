@@ -1,0 +1,95 @@
+# syntax=docker/dockerfile:1
+#
+# Renderer WeBWorK — variante INTERNATIONALE (anglais)
+#
+# Contient tout ce qu'il faut pour utiliser le Standalone Renderer avec le
+# plugin Moodle qtype_webwork, SANS la francisation :
+#   - TeX Live (graphiques TikZ/LaTeX, absents de l'image officielle)
+#   - MathJax v2 hébergé localement (évite la dépendance à un CDN externe)
+#   - les correctifs d'intégration Moodle (MathQuill/MathView/GraphTool),
+#     qui n'ont RIEN à voir avec la langue -- ils corrigent des bogues réels
+#     de ces bibliothèques dans un contexte multi-questions par page.
+#
+# Pour la variante francisée (fr-CA), voir Dockerfile.fr.
+#
+# Construction :
+#   docker build --tag renderer:1.0 ./container      # image de base officielle
+#   docker build --no-cache --tag webwork-renderer:intl --file Dockerfile.intl .
+
+FROM renderer:1.0
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# TeX Live -- nécessaire pour tout problème utilisant PGtikz.pl /
+# PGlateximage.pl (LaTeXImage.pm), qui compile du code TikZ en .dvi puis en
+# .svg via dvisvgm. Absent de l'image officielle du renderer.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends --no-install-suggests \
+        texlive-latex-base \
+        texlive-latex-recommended \
+        texlive-latex-extra \
+        texlive-pictures \
+        texlive-fonts-recommended \
+        cm-super \
+        dvisvgm \
+        curl \
+        ca-certificates \
+    && apt-get clean \
+    && rm -fr /var/lib/apt/lists/* /tmp/*
+
+# Ajoute le support de "useMathView" à RenderProblem.pm, qui ne calculait
+# et ne transmettait que "useMathQuill" à PG.pm (qui, lui, supporte déjà
+# pleinement useMathView -- simple oubli de branchement côté renderer).
+# Permet de choisir MathQuill/MathView/aucun éditeur assisté PAR REQUÊTE
+# (donc par question, via le plugin Moodle), grâce au paramètre
+# "entryAssist" du render-api.
+COPY patches/patch_renderproblem.pl /tmp/patch_renderproblem.pl
+RUN perl /tmp/patch_renderproblem.pl /usr/app/lib/WeBWorK/RenderProblem.pm \
+    && rm /tmp/patch_renderproblem.pl
+
+# Corrige mathview.js : (1) il suppose MathJax v3 sans AUCUNE vérification
+# de compatibilité, alors que le plugin charge volontairement sa propre
+# MathJax v2 ; (2) assainit l'id utilisé comme sélecteur CSS Bootstrap (le
+# deux-points du préfixe de nommage de Moodle y est invalide, ce qui
+# bloquait le changement d'onglet) ; (3) traduit les chaînes codées en dur
+# -- cette dernière partie est sans effet notable en usage anglophone.
+COPY patches/patch_mathview.pl /tmp/patch_mathview.pl
+RUN perl /tmp/patch_mathview.pl /usr/app/lib/PG/htdocs/js/MathView/mathview.91ad44d1.min.js \
+    && rm /tmp/patch_mathview.pl
+
+# Corrige une boucle infinie dans le MutationObserver de mathview.js : le
+# garde-fou "mvInitialized" ne protège pas les éléments retrouvés via
+# querySelectorAll (seulement l'élément directement ajouté au DOM), ce qui
+# cause une réinitialisation en boucle infinie sur une page affichant
+# plusieurs questions à la fois (ex. relecture de tentative de quiz) --
+# bloque complètement le navigateur.
+COPY patches/patch_mathview_loop.pl /tmp/patch_mathview_loop.pl
+RUN perl /tmp/patch_mathview_loop.pl /usr/app/lib/PG/htdocs/js/MathView/mathview.91ad44d1.min.js \
+    && rm /tmp/patch_mathview_loop.pl
+
+# Convertit les déclarations globales "const" en "var" pour
+# mathView_translator/mv_categories (mv_locale_us.js) -- "const" ne tolère
+# aucune redéclaration, ce qui causait "Identifier '...' has already been
+# declared" (et, en cascade, empêchait du JS de Moodle plus loin sur la
+# page de s'exécuter) si ce script s'exécute plus d'une fois sur la page.
+COPY patches/patch_mv_locale.pl /tmp/patch_mv_locale.pl
+RUN perl /tmp/patch_mv_locale.pl /usr/app/lib/PG/htdocs/js/MathView/mv_locale_us.b4786305.min.js \
+    && rm /tmp/patch_mv_locale.pl
+
+# Corrige graphtool.js : même incompatibilité MathJax v2/v3 que MathView
+# ("window.MathJax &&" vérifie l'existence de l'objet mais accède ensuite
+# directement à ".startup.promise", propre à la v3). La traduction de son
+# interface incluse dans ce script est sans effet notable en anglais.
+COPY patches/patch_graphtool.pl /tmp/patch_graphtool.pl
+RUN perl /tmp/patch_graphtool.pl /usr/app/lib/PG/htdocs/js/GraphTool/graphtool.c763eac0.min.js \
+    && rm /tmp/patch_graphtool.pl
+
+# Héberge MathJax v2 localement plutôt que de dépendre du CDN externe
+# (cdn.jsdelivr.net) -- un réseau lent/instable peut faire échouer le
+# chargement avant que la minuterie de réessai du plugin n'abandonne,
+# laissant le LaTeX brut affiché, sans aucune erreur visible. Servi ensuite
+# à "pg_files/mathjax-v2/MathJax.js" (le renderer ne sert que des chemins
+# explicitement routés -- voir lib/RenderApp/Controller/StaticFiles.pm).
+RUN curl -fsSL https://github.com/mathjax/MathJax/archive/refs/tags/2.7.9.tar.gz \
+    | tar xz -C /usr/app/lib/PG/htdocs/ \
+    && mv /usr/app/lib/PG/htdocs/MathJax-2.7.9 /usr/app/lib/PG/htdocs/mathjax-v2
