@@ -36,6 +36,12 @@ RUN perl /tmp/patch_context.pl /usr/app/lib/PG/lib/Value/Context.pm \
 # respecte le paramètre "language" du render-api.
 COPY patches/fr-CA.po /usr/app/lib/PG/lib/WeBWorK/PG/Localize/fr-CA.po
 
+# Catalogue propre au renderer (gabarits RPCRenderFormats/default.*.ep :
+# « You received a score of X% for this attempt. », boutons...) -- lu par
+# WeBWorK::Localize::getLangHandle() dans $RENDER_ROOT/lib/WeBWorK/Localize,
+# PAS par le catalogue de PG ci-dessus.
+COPY patches/fr-CA.renderer.po /usr/app/lib/WeBWorK/Localize/fr-CA.po
+
 # Remplace le fichier de traduction anglais de MathView (catégories,
 # info-bulles) par la version française. Notation d'intervalle québécoise
 # (]a,b[ plutôt que (a,b)).

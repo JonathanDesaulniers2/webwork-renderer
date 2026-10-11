@@ -1,0 +1,192 @@
+# Traduction fr-CA (Québec) du catalogue PROPRE AU RENDERER
+# (lib/WeBWorK/Localize/standalone.pot de openwebwork/renderer, commit
+# 1134ffb), installée dans /usr/app/lib/WeBWorK/Localize/fr-CA.po par
+# Dockerfile.fr.
+#
+# À ne pas confondre avec patches/fr-CA.po, qui traduit les messages de PG
+# (lib/PG/lib/WeBWorK/PG/Localize) : les gabarits du renderer
+# (templates/RPCRenderFormats/default.*.ep) passent par
+# WeBWorK::Localize::getLangHandle(), qui ne lit QUE ce dossier-ci. Sans ce
+# fichier, « You received a score of X% for this attempt. » restait en
+# anglais sous chaque question corrigée, même avec language=fr-CA.
+msgid ""
+msgstr ""
+"Project-Id-Version: webwork-renderer\n"
+"Language: fr_CA\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "%1% correct"
+msgstr "%1 % correct"
+
+msgid "%quant(%1,of the questions remains,of the questions remain) unanswered."
+msgstr "%quant(%1,des questions reste,des questions restent) sans réponse."
+
+msgid "(Instructor hint preview: show the student hint after the following number of attempts:"
+msgstr "(Aperçu enseignant de l'indice : l'indice est montré à l'étudiant après le nombre de tentatives suivant :"
+
+msgid "All of the answers above are correct."
+msgstr "Toutes les réponses ci-dessus sont correctes."
+
+msgid "All of the gradeable answers above are correct."
+msgstr "Toutes les réponses corrigeables ci-dessus sont correctes."
+
+msgid "Answer Preview"
+msgstr "Aperçu de la réponse"
+
+msgid "At least one of the answers above is NOT correct."
+msgstr "Au moins une des réponses ci-dessus n'est PAS correcte."
+
+msgid "Correct Answer"
+msgstr "Bonne réponse"
+
+msgid "Entered"
+msgstr "Saisie"
+
+msgid "FeedbackMessage"
+msgstr "Message de rétroaction"
+
+msgid "Get a new version of this problem"
+msgstr "Obtenir une nouvelle version de ce problème"
+
+msgid "Go back to Part 1"
+msgstr "Revenir à la partie 1"
+
+msgid "Go on to next part"
+msgstr "Passer à la partie suivante"
+
+msgid "Hardcopy will always print the original version of the problem."
+msgstr "La version imprimée présentera toujours la version originale du problème."
+
+msgid "Hint:"
+msgstr "Indice :"
+
+msgid "Hint: "
+msgstr "Indice : "
+
+msgid "If you come back to it later, it may revert to its original version."
+msgstr "Si vous y revenez plus tard, il pourrait reprendre sa version originale."
+
+msgid "Instructor solution preview: show the student solution after due date."
+msgstr "Aperçu enseignant de la solution : la solution est montrée à l'étudiant après la date de remise."
+
+msgid "Message"
+msgstr "Message"
+
+msgid "Note:"
+msgstr "Remarque :"
+
+msgid "Preview My Answers"
+msgstr "Prévisualiser mes réponses"
+
+msgid "Result"
+msgstr "Résultat"
+
+msgid "Results for this submission"
+msgstr "Résultats de cette soumission"
+
+msgid "Set random seed to:"
+msgstr "Régler la graine aléatoire à :"
+
+msgid "Show correct answers"
+msgstr "Afficher les bonnes réponses"
+
+msgid "Show Correct Answers"
+msgstr "Afficher les bonnes réponses"
+
+msgid "Solution:"
+msgstr "Solution :"
+
+msgid "Solution: "
+msgstr "Solution : "
+
+msgid "Some answers will be graded later."
+msgstr "Certaines réponses seront corrigées plus tard."
+
+msgid "Submit Answers"
+msgstr "Soumettre les réponses"
+
+msgid "Submit your answers again to go on to the next part."
+msgstr "Soumettez de nouveau vos réponses pour passer à la partie suivante."
+
+msgid "The answer above is NOT correct."
+msgstr "La réponse ci-dessus n'est PAS correcte."
+
+msgid "The answer above is correct."
+msgstr "La réponse ci-dessus est correcte."
+
+msgid "This is a new (re-randomized) version of the problem."
+msgstr "Ceci est une nouvelle version (générée de nouveau au hasard) du problème."
+
+msgid "This problem contains a video which must be viewed online."
+msgstr "Ce problème contient une vidéo qui doit être visionnée en ligne."
+
+msgid "This problem has more than one part."
+msgstr "Ce problème comporte plus d'une partie."
+
+msgid "Ungraded"
+msgstr "Non corrigé"
+
+msgid "You can earn partial credit on this problem."
+msgstr "Vous pouvez obtenir une partie des points pour ce problème."
+
+msgid "You can get a new version of this problem after the due date."
+msgstr "Vous pourrez obtenir une nouvelle version de ce problème après la date de remise."
+
+msgid "You may not change your answers when going on to the next part!"
+msgstr "Vous ne pouvez pas modifier vos réponses en passant à la partie suivante!"
+
+# Absent de standalone.pot (plus ancien que le gabarit), mais utilisé par
+# templates/RPCRenderFormats/default.html.ep et default.json.ep.
+msgid "You received a score of %1 for this attempt."
+msgstr "Vous avez obtenu un résultat de %1 pour cette tentative."
+
+msgid "Your browser does not support the video tag."
+msgstr "Votre navigateur ne prend pas en charge les vidéos."
+
+msgid "Your score for this attempt is for this part only;"
+msgstr "Votre résultat pour cette tentative correspond à cette partie seulement;"
+
+msgid "Your score on this attempt is %1"
+msgstr "Votre résultat pour cette tentative est de %1"
+
+msgid "Your score was not recorded."
+msgstr "Votre résultat n'a pas été enregistré."
+
+msgid "answer"
+msgstr "réponse"
+
+msgid "column"
+msgstr "colonne"
+
+msgid "correct"
+msgstr "correct"
+
+msgid "i"
+msgstr "i"
+
+msgid "if"
+msgstr "si"
+
+msgid "incorrect"
+msgstr "incorrect"
+
+msgid "otherwise"
+msgstr "sinon"
+
+msgid "part"
+msgstr "partie"
+
+msgid "problem"
+msgstr "problème"
+
+msgid "row"
+msgstr "ligne"
+
+msgid "when you submit your answers"
+msgstr "lorsque vous soumettez vos réponses"
+
+msgid "your overall score is for all the parts combined."
+msgstr "votre résultat global porte sur toutes les parties combinées."

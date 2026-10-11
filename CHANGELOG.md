@@ -2,12 +2,14 @@
 
 ## À venir
 
-- **fr-CA : message de score traduit** — « You received a score of X% for this attempt. »
-  restait en anglais sous chaque question corrigée dans Moodle, même avec `language=fr-CA`. Il
-  vient du gabarit du renderer (`templates/RPCRenderFormats/default.*.ep`), passé à `maketext`
-  mais absent de `fr-CA.po`. Ajouté, avec les boutons du même gabarit (« Preview My Answers »,
-  « Submit Answers », « Show Correct Answers »), selon la politique de traduction incrémentale.
-  Constaté sur une vraie instance Moodle 5.3 ; à confirmer après reconstruction de l'image `fr`.
+- **fr-CA : catalogue du renderer** — « You received a score of X% for this attempt. » restait
+  en anglais sous chaque question corrigée dans Moodle, même avec `language=fr-CA`. Les gabarits
+  du renderer (`templates/RPCRenderFormats/default.*.ep`) traduisent par
+  `WeBWorK::Localize::getLangHandle()`, qui ne lit que `$RENDER_ROOT/lib/WeBWorK/Localize/` — un
+  catalogue distinct de celui de PG (`patches/fr-CA.po`), et sans français en amont. Nouveau
+  `patches/fr-CA.renderer.po` : tout `standalone.pot` traduit (politique de traduction
+  incrémentale), plus les chaînes du gabarit absentes du `.pot` ; copié par `Dockerfile.fr`.
+  Constaté et validé sur une vraie instance Moodle 5.3.
 
 ## v1.1
 
