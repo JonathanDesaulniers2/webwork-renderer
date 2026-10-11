@@ -1,5 +1,22 @@
 # Journal des modifications
 
+## v1.1
+
+Pour le plugin Moodle 5.3. Ajout seulement : rien ne change pour les plugins Moodle 4.1 / 4.5,
+qui continuent d'utiliser MathJax v2 — une même image sert les trois versions du plugin.
+
+- **MathJax 4.1.3 hébergé localement** (`pg_files/mathjax-v4/`), même version que le filtre
+  MathJax de Moodle 5.3, avec son paquet de polices (`pg_files/mathjax-v4/fonts/`, sinon cherché
+  sur cdn.jsdelivr.net). Moodle 5 charge MathJax 4 et remplace `window.MathJax` : le plugin ne
+  peut plus y charger MathJax v2 et réutilise l'instance de Moodle, chargée depuis cette copie.
+  La construction vérifie la présence des trois chemins dont le plugin dépend.
+- **Renderer amont épinglé** (`openwebwork/renderer` au commit `1134ffb`, 18 juin 2025, PG au
+  commit `4b3e564`) dans le workflow de publication et dans les instructions de construction :
+  les correctifs visent des fichiers précis de PG (noms à empreinte, ex.
+  `mathview.91ad44d1.min.js`) et échoueraient sur une version amont plus récente.
+- **Documentation** : section CORS (MathJax 4) dans `docs/INSTALLATION.md`, tableau de
+  compatibilité image ↔ plugin dans le README.
+
 ## v1.0
 
 Première version publiée, en deux variantes (`intl` et `fr`).

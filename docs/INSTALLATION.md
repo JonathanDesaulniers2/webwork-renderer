@@ -1,7 +1,7 @@
 # Installation — réseau, HTTPS et certificats
 
 Ce document couvre tout ce qui entoure le déploiement du renderer : restriction d'accès
-réseau, mise en place de HTTPS via Caddy, et gestion des certificats. Pour la construction
+réseau, en-têtes CORS (MathJax 4), mise en place de HTTPS via Caddy, et gestion des certificats. Pour la construction
 des images elles-mêmes, voir le [README principal](../README.md).
 
 ## Pare-feu / sécurité réseau
@@ -25,6 +25,34 @@ sudo sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/' /
 sudo ufw allow from 172.17.0.0/16 to any port 3000
 sudo ufw reload
 ```
+
+## CORS — MathJax 4
+
+*(Concerne le plugin Moodle 5.3 avec MathJax « hébergé localement ».)*
+
+Le plugin pour Moodle 5.3 charge MathJax 4 depuis le renderer (`pg_files/mathjax-v4/`). La
+synthèse vocale de MathJax 4 (accessibilité) lit ensuite ses dictionnaires
+(`pg_files/mathjax-v4/sre/mathmaps/*.json`) par une requête que le navigateur n'autorise, d'une
+origine à l'autre, qu'avec un en-tête `Access-Control-Allow-Origin`.
+
+**Par défaut, il n'y a rien à faire** : la configuration amont du renderer (`render_app.conf`,
+copiée de `render_app.conf.dist`) contient `CORS_ORIGIN => '*'`, et le renderer envoie cet
+en-tête sur toutes ses réponses.
+
+Si vous restreignez ce réglage (le renderer avertit au démarrage que `'*'` n'est pas sûr),
+indiquez **l'adresse de votre Moodle** :
+
+```perl
+CORS_ORIGIN => 'https://moodle.votre-institution.ca',
+```
+
+Sans en-tête CORS valide, le plugin le détecte et désactive la synthèse vocale de MathJax (il
+active à la place le MathML d'assistance, lu par les lecteurs d'écran) : les formules
+s'affichent toujours. Sans cette précaution, l'échec du chargement des dictionnaires bloque le
+rendu de **toutes** les formules — vérifié avec MathJax 4.1.3.
+
+La sortie SVG utilisée par le plugin n'a, elle, besoin d'aucun en-tête CORS : ses glyphes sont
+chargés comme des scripts, pas comme des polices web.
 
 ## HTTPS via Caddy
 

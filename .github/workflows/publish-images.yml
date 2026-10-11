@@ -27,10 +27,18 @@ jobs:
       # L'image de base officielle du renderer n'est pas publiée sur un
       # registre public -- il faut la construire nous-mêmes depuis les
       # sources amont avant de pouvoir appliquer nos correctifs.
+      #
+      # Version ÉPINGLÉE : les correctifs visent des fichiers précis de PG
+      # (ex. mathview.91ad44d1.min.js, dont le nom contient l'empreinte du
+      # contenu) et échoueraient sur une version amont plus récente. Ce
+      # commit (18 juin 2025, PG au commit 4b3e564) est celui sur lequel les
+      # correctifs ont été mis au point. Pour passer à une version plus
+      # récente : changer ce ref, reconstruire, et adapter les correctifs.
       - name: Récupérer le renderer amont
         uses: actions/checkout@v4
         with:
           repository: openwebwork/renderer
+          ref: 1134ffbbf5e656148e579f424f70bcd9f1d15936
           submodules: recursive
           path: container
 

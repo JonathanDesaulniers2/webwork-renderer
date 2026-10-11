@@ -27,9 +27,11 @@ le réglage correspondant du plugin Moodle).
 Trois correctifs distincts dans `mathview.js` :
 
 1. **Compatibilité MathJax v2/v3** — le fichier accède directement à `MathJax.startup.promise`
-   (propre à la v3) sans vérification, alors que le plugin charge volontairement MathJax v2
-   (plus tolérant dans un contexte de fragment de page). L'ancienne version de ce même fichier
-   avait cette vérification ; elle a disparu en amont.
+   (propre à la v3, et toujours présent en v4) sans vérification, alors que le plugin pour
+   Moodle 4.x charge volontairement MathJax v2 (plus tolérant dans un contexte de fragment de
+   page). L'ancienne version de ce même fichier avait cette vérification ; elle a disparu en
+   amont. Le plugin pour Moodle 5.3 utilise MathJax 4 et passe donc par la branche v3 du
+   correctif, qui reste nécessaire pour les plugins 4.x.
 2. **Sélecteur CSS invalide** — l'identifiant du champ est réutilisé tel quel comme sélecteur
    CSS Bootstrap, mais le préfixe de nommage de Moodle contient un **deux-points** (ex.
    `q440:1_AnSwEr0001`), syntaxiquement invalide dans un sélecteur. Résultat : le changement

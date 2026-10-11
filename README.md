@@ -8,8 +8,16 @@ Deux variantes sont disponibles :
 
 | Variante | Contenu | Pour qui |
 |---|---|---|
-| **`intl`** | TeX Live, MathJax local, correctifs d'intégration Moodle | Installations anglophones ou réellement bilingues |
+| **`intl`** | TeX Live, MathJax v2 et MathJax 4 locaux, correctifs d'intégration Moodle | Installations anglophones ou réellement bilingues |
 | **`fr`** | Tout ce qui précède **+ francisation complète (fr-CA)** | Institutions francophones (Québec) |
+
+**Compatibilité avec le plugin** : une même image sert les trois versions du plugin
+[qtype_webwork](https://github.com/JonathanDesaulniers2/moodle-qtype_webwork#plugins-moodle--webwork).
+
+| Plugin pour… | Image du renderer | Pourquoi |
+|---|---|---|
+| Moodle 4.1 / 4.5 | v1.0 ou plus | MathJax v2 (`pg_files/mathjax-v2/`) |
+| Moodle 5.3 | **v1.1 ou plus** | MathJax 4 (`pg_files/mathjax-v4/`), seule version compatible avec celle de Moodle 5 |
 
 La variante `fr` est construite **par-dessus** `intl` : les correctifs d'intégration (bogues
 réels de MathQuill/MathView/GraphTool en contexte multi-questions) sont communs aux deux, seules
@@ -48,8 +56,11 @@ sudo docker run -d \
 Utile pour auditer les correctifs, en ajouter, ou adapter les traductions.
 
 ```bash
-# 1. Image de base officielle (amont)
-git clone --recursive https://github.com/openwebwork/renderer container/
+# 1. Image de base officielle (amont), à la version sur laquelle les correctifs ont été mis au
+#    point -- ils visent des fichiers précis de PG et échoueraient sur une version plus récente
+git clone https://github.com/openwebwork/renderer container/
+git -C container checkout 1134ffbbf5e656148e579f424f70bcd9f1d15936
+git -C container submodule update --init --recursive
 docker build --tag renderer:1.0 ./container
 
 # 2. Variante internationale
@@ -76,7 +87,7 @@ attendait justement CE processus, tout le conteneur s'arrête.
 
 ## Documentation détaillée
 
-- [`docs/INSTALLATION.md`](docs/INSTALLATION.md) — pare-feu, HTTPS/Caddy, certificats
+- [`docs/INSTALLATION.md`](docs/INSTALLATION.md) — pare-feu, CORS (MathJax 4), HTTPS/Caddy, certificats
 - [`docs/PATCHES.md`](docs/PATCHES.md) — ce que fait chaque correctif, et pourquoi
 - [`docs/TRADUCTION.md`](docs/TRADUCTION.md) — les deux mécanismes de traduction, et comment
   contribuer de nouvelles traductions

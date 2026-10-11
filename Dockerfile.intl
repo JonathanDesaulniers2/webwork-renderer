@@ -5,7 +5,8 @@
 # Contient tout ce qu'il faut pour utiliser le Standalone Renderer avec le
 # plugin Moodle qtype_webwork, SANS la francisation :
 #   - TeX Live (graphiques TikZ/LaTeX, absents de l'image officielle)
-#   - MathJax v2 hébergé localement (évite la dépendance à un CDN externe)
+#   - MathJax v2 (plugin Moodle 4.1 / 4.5) et MathJax 4 (plugin Moodle 5.3)
+#     hébergés localement (évite la dépendance à un CDN externe)
 #   - les correctifs d'intégration Moodle (MathQuill/MathView/GraphTool),
 #     qui n'ont RIEN à voir avec la langue -- ils corrigent des bogues réels
 #     de ces bibliothèques dans un contexte multi-questions par page.
@@ -93,3 +94,25 @@ RUN perl /tmp/patch_graphtool.pl /usr/app/lib/PG/htdocs/js/GraphTool/graphtool.c
 RUN curl -fsSL https://github.com/mathjax/MathJax/archive/refs/tags/2.7.9.tar.gz \
     | tar xz -C /usr/app/lib/PG/htdocs/ \
     && mv /usr/app/lib/PG/htdocs/MathJax-2.7.9 /usr/app/lib/PG/htdocs/mathjax-v2
+
+# Héberge AUSSI MathJax 4 (même version que le filtre MathJax de Moodle 5.3),
+# pour le plugin Moodle 5.3 : le filtre de Moodle 5 charge MathJax 4 et
+# remplace window.MathJax, si bien que le plugin ne peut plus y charger
+# MathJax v2 ; il réutilise l'instance de Moodle, chargée depuis cette copie.
+# MathJax v2 reste là pour les plugins Moodle 4.1 / 4.5 : une même image sert
+# les trois versions du plugin.
+#
+# Servi à "pg_files/mathjax-v4/" (le plugin utilise tex-mml-svg.js). Les
+# polices de MathJax 4 sont un paquet npm séparé, cherché par défaut sur
+# cdn.jsdelivr.net : on l'installe dans "pg_files/mathjax-v4/fonts/", que le
+# plugin indique à MathJax (loader.paths.fonts). Les tests vérifient les
+# trois chemins dont le plugin dépend.
+ARG MATHJAX4_VERSION=4.1.3
+RUN mkdir -p /usr/app/lib/PG/htdocs/mathjax-v4/fonts/mathjax-newcm-font \
+    && curl -fsSL "https://registry.npmjs.org/mathjax/-/mathjax-${MATHJAX4_VERSION}.tgz" \
+        | tar xz --strip-components=1 -C /usr/app/lib/PG/htdocs/mathjax-v4 \
+    && curl -fsSL "https://registry.npmjs.org/@mathjax/mathjax-newcm-font/-/mathjax-newcm-font-${MATHJAX4_VERSION}.tgz" \
+        | tar xz --strip-components=1 -C /usr/app/lib/PG/htdocs/mathjax-v4/fonts/mathjax-newcm-font \
+    && test -f /usr/app/lib/PG/htdocs/mathjax-v4/tex-mml-svg.js \
+    && test -f /usr/app/lib/PG/htdocs/mathjax-v4/sre/mathmaps/base.json \
+    && test -d /usr/app/lib/PG/htdocs/mathjax-v4/fonts/mathjax-newcm-font/svg/dynamic
