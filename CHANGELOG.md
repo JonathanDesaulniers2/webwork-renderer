@@ -1,5 +1,14 @@
 # Journal des modifications
 
+## À venir
+
+- **fr-CA : message de score traduit** — « You received a score of X% for this attempt. »
+  restait en anglais sous chaque question corrigée dans Moodle, même avec `language=fr-CA`. Il
+  vient du gabarit du renderer (`templates/RPCRenderFormats/default.*.ep`), passé à `maketext`
+  mais absent de `fr-CA.po`. Ajouté, avec les boutons du même gabarit (« Preview My Answers »,
+  « Submit Answers », « Show Correct Answers »), selon la politique de traduction incrémentale.
+  Constaté sur une vraie instance Moodle 5.3 ; à confirmer après reconstruction de l'image `fr`.
+
 ## v1.1
 
 Pour le plugin Moodle 5.3. Ajout seulement : rien ne change pour les plugins Moodle 4.1 / 4.5,

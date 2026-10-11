@@ -214,6 +214,18 @@ msgstr "Ce problème comporte plusieurs parties."
 msgid "True"
 msgstr "Vrai"
 
+# Boutons du gabarit du renderer (templates/RPCRenderFormats/default.*.ep).
+# Masqués dans Moodle (le plugin utilise ses propres boutons), traduits
+# pour l'aperçu natif du renderer.
+msgid "Preview My Answers"
+msgstr "Prévisualiser mes réponses"
+
+msgid "Show Correct Answers"
+msgstr "Afficher les bonnes réponses"
+
+msgid "Submit Answers"
+msgstr "Soumettre les réponses"
+
 #: /opt/webwork/pg/macros/core/PGessaymacros.pl:69
 msgid "Ungraded"
 msgstr "Non classé"
@@ -233,6 +245,11 @@ msgstr "Vous pouvez obtenir une nouvelle version du problème après la date de 
 #: /opt/webwork/pg/macros/deprecated/compoundProblem.pl:646
 msgid "You may not change your answers when going on to the next part!"
 msgstr "Vous ne pouvez pas modifier vos réponses en passant à la partie suivante!"
+
+# Gabarit du renderer (templates/RPCRenderFormats/default.html.ep et
+# default.json.ep), affiché sous chaque question corrigée dans Moodle.
+msgid "You received a score of %1 for this attempt."
+msgstr "Vous avez obtenu un résultat de %1 pour cette tentative."
 
 #: /opt/webwork/pg/macros/core/PGbasicmacros.pl:3034
 msgid "Your browser does not support the video tag."
