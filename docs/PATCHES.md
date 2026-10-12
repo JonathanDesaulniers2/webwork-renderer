@@ -38,6 +38,14 @@ Trois correctifs distincts dans `mathview.js` :
    d'onglet de catégories restait silencieusement bloqué sur « Basic ».
 3. **Chaînes codées en dur** — traduit `Equation Editor`, `Insert`, `Clear`, absents du fichier
    de locale. Sans effet notable en usage anglophone.
+4. **Position du curseur après insertion** — MathView place le curseur après la première
+   ouverture trouvée par `/\(\)|\[,|\(,/`. Les intervalles en notation québécoise de
+   `mv_locale_fr.js` (`],]`, `],[`) commencent par `]` : le curseur restait devant le modèle
+   inséré. `\],` est ajouté à l'expression ; sans effet sur la notation anglaise.
+5. **Libellé du bouton de sections** — MathView y écrivait une fois pour toutes le libellé fixe
+   `mathView_translator[12]` (« Operations »/« Opérations ») et ne le mettait jamais à jour : en
+   français, il se lisait comme le nom d'une section, même dans « Intervalles ». Le bouton affiche
+   maintenant la section active (la première au départ, puis celle choisie).
 
 ### `patch_mathview_loop.pl`
 
@@ -73,8 +81,14 @@ Voir [`TRADUCTION.md`](TRADUCTION.md) pour le détail des deux mécanismes de tr
 et de leurs comportements respectifs face au paramètre `language`.
 
 - **`patch_context.pl`** — ~185 messages du Parser/Value (`$context->{error}{msg}`)
-- **`fr-CA.po`** — ~160 chaînes du système standard maketext/.po
-- **`mv_locale_fr.js`** — catégories et info-bulles de MathView, notation d'intervalle québécoise
+- **`fr-CA.po`** — ~160 chaînes du système standard maketext/.po de **PG**
+  (`lib/PG/lib/WeBWorK/PG/Localize/`)
+- **`fr-CA.renderer.po`** — catalogue **propre au renderer** (`lib/WeBWorK/Localize/`), lu par
+  ses gabarits `RPCRenderFormats/default.*.ep` (« You received a score of X% for this
+  attempt. », boutons) : tout `standalone.pot` traduit, plus les chaînes du gabarit absentes du
+  `.pot`
+- **`mv_locale_fr.js`** — catégories et info-bulles de MathView ; intervalles en notation
+  québécoise à l'affichage **et** à l'insertion (`],]`, `[,[`, `],[`)
 - **`patch_cofidaho.pl`** — messages de `CofIdaho_macros.pl`
 - **`patch_answerchecker.pl`** — message dynamique construit par `cmp_class()`/`showClass()`
 
@@ -85,3 +99,16 @@ Les fichiers JavaScript patchés gardent **exactement le même nom** d'une recon
 avant de tester (clic droit sur le bouton de rechargement → « Vider le cache et effectuer une
 actualisation forcée »), sinon le navigateur continuera à servir l'ancienne version
 indéfiniment — un piège qui peut coûter des heures de débogage.
+
+Le renderer n'envoie aucun en-tête `Cache-Control` : le navigateur peut réutiliser sa copie
+pendant des heures sans la redemander. Pour éviter le problème chez les utilisateurs, ajoutez
+dans le Caddyfile (voir le README du plugin) :
+
+```
+header /pg_files/* Cache-Control no-cache
+```
+
+Le navigateur revalide alors ces fichiers à chaque page (réponse 304 s'ils n'ont pas changé).
+⚠️ Si le Caddyfile est monté en fichier unique (`-v ~/Caddyfile:/etc/caddy/Caddyfile`), ne le
+modifiez pas avec `sed -i` (le conteneur garderait l'ancien fichier) : éditez-le en place, puis
+`docker exec webwork-caddy caddy reload --config /etc/caddy/Caddyfile`.

@@ -51,8 +51,12 @@ active à la place le MathML d'assistance, lu par les lecteurs d'écran) : les f
 s'affichent toujours. Sans cette précaution, l'échec du chargement des dictionnaires bloque le
 rendu de **toutes** les formules — vérifié avec MathJax 4.1.3.
 
-La sortie SVG utilisée par le plugin n'a, elle, besoin d'aucun en-tête CORS : ses glyphes sont
-chargés comme des scripts, pas comme des polices web.
+Le même en-tête décide de la sortie utilisée par le plugin pour Moodle 5.3 : avec CORS, la
+sortie **CHTML** (`tex-mml-chtml.js`, vraies polices woff2 servies depuis
+`pg_files/mathjax-v4/fonts/`), au rendu nettement plus propre ; sans CORS, le navigateur refuse
+ces polices d'une autre origine et le plugin se rabat sur la sortie **SVG** (`tex-mml-svg.js`),
+dont les glyphes arrivent comme des scripts — plus pâle et un peu floue à la taille du texte.
+Gardez donc CORS actif (`'*'` ou l'adresse de votre Moodle).
 
 ## HTTPS via Caddy
 
