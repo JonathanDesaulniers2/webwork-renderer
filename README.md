@@ -92,6 +92,14 @@ attendait justement CE processus, tout le conteneur s'arrête.
 - [`docs/TRADUCTION.md`](docs/TRADUCTION.md) — les deux mécanismes de traduction, et comment
   contribuer de nouvelles traductions
 
+## Auteur
+
+**Modifié par Jonathan Desaulniers** — correctifs d'intégration à Moodle, francisation (fr-CA)
+et images Docker, à partir du [WeBWorK Standalone Renderer](https://github.com/openwebwork/renderer)
+et de [PG](https://github.com/openwebwork/pg) du projet WeBWorK.
+
+Claude Code d'Anthropic a été utilisé dans la programmation du renderer.
+
 ## Licence
 
 Voir [`LICENSE`](LICENSE). Ces images redistribuent :
