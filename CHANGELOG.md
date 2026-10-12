@@ -10,6 +10,18 @@
   `patches/fr-CA.renderer.po` : tout `standalone.pot` traduit (politique de traduction
   incrémentale), plus les chaînes du gabarit absentes du `.pot` ; copié par `Dockerfile.fr`.
   Constaté et validé sur une vraie instance Moodle 5.3.
+- **MathView : intervalles en notation québécoise dans le champ réponse** — les boutons
+  d'intervalles ouverts affichaient `]a,b]` mais inséraient `(,]`. `mv_locale_fr.js` insère
+  maintenant `],]`, `[,[` et `],[`, lus par PG dans les problèmes en
+  `Context("AlternateIntervals")` (`contextAlternateIntervals.pl`, déjà fourni par PG ;
+  `contextAlternateDecimal.pl` aussi). Ces contextes ne sont **pas** activés globalement : avec
+  la virgule décimale partout, un problème écrivant `(2,4]` ne se rend plus (`2,4` lu 2,4).
+- **MathView : curseur après un « ] » ouvrant** (`patch_mathview.pl`) — après l'insertion de
+  `],]`, le curseur restait devant le modèle.
+- **MathView : libellé du bouton de sections** (`patch_mathview.pl`) — il affichait toujours
+  « Opérations » (libellé fixe `mathView_translator[12]`), même dans « Intervalles » ; il affiche
+  maintenant la section active.
+- Après reconstruction, vider le cache du navigateur : `mathview.91ad44d1.min.js` garde son nom.
 
 ## v1.1
 
