@@ -59,6 +59,28 @@ if ($idcount == 0) {
     die "Aucune occurrence de 'this.id = ...mathviewer' trouvée -- le fichier a peut-être une version différente. Aucune modification effectuée.\n";
 }
 
+# 4. Position du curseur après l'insertion d'un modèle : mathview.js le
+#    place juste après la première ouverture trouvée par /\(\)|\[,|\(,/.
+#    Les intervalles en notation québécoise de mv_locale_fr.js (],] et
+#    ],[) commencent par « ] » : sans « \], » dans l'expression, le curseur
+#    restait AVANT le modèle inséré. Sans effet sur la notation anglaise.
+my $cursorcount = ($content =~ s{\Q/\(\)|\[,|\(,/\E}{/\\(\\)|\\[,|\\(,|\\],/}g);
+if ($cursorcount == 0) {
+    die "Expression de position du curseur introuvable -- le fichier a peut-être une version différente. Aucune modification effectuée.\n";
+}
+
+# 5. Libellé du bouton de sections : mathview.js y écrit une fois pour
+#    toutes mathView_translator[12] (« Operations ») et ne le met jamais à
+#    jour. En français, « Opérations » se lit comme le nom d'une section :
+#    après un passage à « Intervalles », le bouton affichait toujours
+#    « Opérations ». Il affiche maintenant le nom de la section active :
+#    celui de la première au départ, puis celui de la section choisie.
+my $labelcount = ($content =~ s{\Qc.textContent=mathView_translator[12]\E}{c.textContent=mv_categories[0].text}g);
+my $switchcount = ($content =~ s{\Qi.textContent=e.text,o.append(i)\E}{i.textContent=e.text,i.addEventListener("click",()=>{this.dropdown.previousElementSibling.textContent=e.text}),o.append(i)}g);
+if ($labelcount == 0 || $switchcount == 0) {
+    die "Bouton de sections introuvable ($labelcount/$switchcount) -- le fichier a peut-être une version différente. Aucune modification effectuée.\n";
+}
+
 my %hardcoded = (
     '"Equation Editor"' => "\"Éditeur d'équations\"",
     '"Insert"'          => "\"Insérer\"",
@@ -74,4 +96,4 @@ open(my $out, '>:encoding(UTF-8)', $path) or die "Impossible d'écrire $path: $!
 print $out $content;
 close($out);
 
-print "Correctif appliqué avec succès à $path ($count occurrence(s) MathJax + $idcount occurrence(s) id + $hcount chaîne(s) codée(s) en dur)\n";
+print "Correctif appliqué avec succès à $path ($count occurrence(s) MathJax + $idcount occurrence(s) id + $hcount chaîne(s) codée(s) en dur + $cursorcount curseur + $labelcount/$switchcount bouton de sections)\n";

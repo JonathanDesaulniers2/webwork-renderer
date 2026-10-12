@@ -235,9 +235,12 @@ var mv_categories = [
 		text: mathView_translator[4], // 'Intervalles'
 		// Notation québécoise : les crochets pointent vers l'extérieur pour
 		// une extrémité ouverte (ex. ]a,b[ plutôt que (a,b)), au lieu des
-		// parenthèses. Seuls "text" (étiquette visuelle) et "latex" (modèle
-		// inséré) sont ajustés ; "PG" reste la syntaxe interne de WeBWorK,
-		// indépendante de la convention de notation visuelle.
+		// parenthèses -- pour l'étiquette ("text"), le modèle LaTeX ("latex")
+		// ET le texte inséré dans le champ réponse ("PG"). PG ne lit cette
+		// notation que dans les problèmes qui chargent
+		// contextAlternateIntervals.pl (Context("AlternateIntervals")), ce que
+		// font les problèmes d'intervalles du projet ; ailleurs, l'étudiant
+		// peut toujours taper (a,b].
 		operators: [
 			{
 				text: '\\([a,b]\\)',
@@ -249,19 +252,19 @@ var mv_categories = [
 				text: '\\(]a,b]\\)',
 				tooltip: 'intervalle semi-ouvert',
 				latex: '\\left]{},{} \\right]',
-				PG: '(,]'
+				PG: '],]'
 			},
 			{
 				text: '\\([a,b[\\)',
 				tooltip: 'intervalle semi-ouvert',
 				latex: '\\left[{},{} \\right[',
-				PG: '[,)'
+				PG: '[,['
 			},
 			{
 				text: '\\(]a,b[\\)',
 				tooltip: 'intervalle ouvert',
 				latex: '\\left]{},{} \\right[',
-				PG: '(,)'
+				PG: '],['
 			},
 			{
 				text: '\\(A\\cup B\\)',
